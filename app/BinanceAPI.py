@@ -22,7 +22,7 @@ class BinanceAPI:
 
     def ping(self):
         path = "%s/ping" % self.BASE_URL_V3
-        return requests.get(path, timeout=30, verify=True).json()
+        return requests.get(path, timeout=30, verify=True).json(timeout=60)
     
     def get_history(self, market, limit=50):
         path = "%s/historicalTrades" % self.BASE_URL
@@ -54,15 +54,15 @@ class BinanceAPI:
         return self._get(path, {})
 
     def get_products(self):
-        return requests.get(self.PUBLIC_URL, timeout=30, verify=True).json()
+        return requests.get(self.PUBLIC_URL, timeout=30, verify=True).json(timeout=60)
    
     def get_server_time(self):
         path = "%s/time" % self.BASE_URL_V3
-        return requests.get(path, timeout=30, verify=True).json()
+        return requests.get(path, timeout=30, verify=True).json(timeout=60)
     
     def get_exchange_info(self):
         path = "%s/exchangeInfo" % self.BASE_URL
-        return requests.get(path, timeout=30, verify=True).json()
+        return requests.get(path, timeout=30, verify=True).json(timeout=60)
 
     def get_open_orders(self, market, limit = 100):
         path = "%s/openOrders" % self.BASE_URL_V3
@@ -107,7 +107,7 @@ class BinanceAPI:
     def _get_no_sign(self, path, params={}):
         query = urlencode(params)
         url = "%s?%s" % (path, query)
-        return requests.get(url, timeout=30, verify=True).json()
+        return requests.get(url, timeout=30, verify=True).json(timeout=60)
     
     def _sign(self, params={}):
         data = params.copy()
@@ -127,7 +127,7 @@ class BinanceAPI:
         url = "%s?%s" % (path, query)
         header = {"X-MBX-APIKEY": self.key}
         return requests.get(url, headers=header, \
-            timeout=30, verify=True).json()
+            timeout=30, verify=True).json(timeout=60)
 
     def _post(self, path, params={}):
         params.update({"recvWindow": config.recv_window})
@@ -135,7 +135,7 @@ class BinanceAPI:
         url = "%s" % (path)
         header = {"X-MBX-APIKEY": self.key}
         return requests.post(url, headers=header, data=query, \
-            timeout=30, verify=True).json()
+            timeout=30, verify=True).json(timeout=60)
 
     def _order(self, market, quantity, side, rate=None):
         params = {}
@@ -159,7 +159,7 @@ class BinanceAPI:
         url = "%s?%s" % (path, query)
         header = {"X-MBX-APIKEY": self.key}
         return requests.delete(url, headers=header, \
-            timeout=30, verify=True).json()
+            timeout=30, verify=True).json(timeout=60)
 
     def _format(self, price):
         return "{:.8f}".format(price)
