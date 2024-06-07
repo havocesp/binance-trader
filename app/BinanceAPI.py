@@ -104,12 +104,14 @@ class BinanceAPI:
         params = {"symbol": market, "orderId": order_id}
         return self._delete(path, params)
 
-    def _get_no_sign(self, path, params={}):
+    def _get_no_sign(self, path, params=None):
+        params = {} if params is None else params
         query = urlencode(params)
         url = "%s?%s" % (path, query)
         return requests.get(url, timeout=30, verify=True).json()
     
-    def _sign(self, params={}):
+    def _sign(self, params=None):
+        params = {} if params is None else params
         data = params.copy()
 
         ts = int(1000 * time.time())
@@ -121,7 +123,8 @@ class BinanceAPI:
         data.update({"signature": signature})
         return data
 
-    def _get(self, path, params={}):
+    def _get(self, path, params=None):
+        params = {} if params is None else params
         params.update({"recvWindow": config.recv_window})
         query = urlencode(self._sign(params))
         url = "%s?%s" % (path, query)
@@ -129,7 +132,8 @@ class BinanceAPI:
         return requests.get(url, headers=header, \
             timeout=30, verify=True).json()
 
-    def _post(self, path, params={}):
+    def _post(self, path, params=None):
+        params = {} if params is None else params
         params.update({"recvWindow": config.recv_window})
         query = urlencode(self._sign(params))
         url = "%s" % (path)
@@ -153,7 +157,8 @@ class BinanceAPI:
         
         return params
            
-    def _delete(self, path, params={}):
+    def _delete(self, path, params=None):
+        params = {} if params is None else params
         params.update({"recvWindow": config.recv_window})
         query = urlencode(self._sign(params))
         url = "%s?%s" % (path, query)
