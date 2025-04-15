@@ -3,6 +3,7 @@ import hashlib
 import requests
 import hmac
 import config
+from security import safe_requests
 
 try:
     from urllib import urlencode
@@ -22,7 +23,7 @@ class BinanceAPI:
 
     def ping(self):
         path = "%s/ping" % self.BASE_URL_V3
-        return requests.get(path, timeout=30, verify=True).json()
+        return safe_requests.get(path, timeout=30, verify=True).json()
     
     def get_history(self, market, limit=50):
         path = "%s/historicalTrades" % self.BASE_URL
@@ -54,15 +55,15 @@ class BinanceAPI:
         return self._get(path, {})
 
     def get_products(self):
-        return requests.get(self.PUBLIC_URL, timeout=30, verify=True).json()
+        return safe_requests.get(self.PUBLIC_URL, timeout=30, verify=True).json()
    
     def get_server_time(self):
         path = "%s/time" % self.BASE_URL_V3
-        return requests.get(path, timeout=30, verify=True).json()
+        return safe_requests.get(path, timeout=30, verify=True).json()
     
     def get_exchange_info(self):
         path = "%s/exchangeInfo" % self.BASE_URL
-        return requests.get(path, timeout=30, verify=True).json()
+        return safe_requests.get(path, timeout=30, verify=True).json()
 
     def get_open_orders(self, market, limit = 100):
         path = "%s/openOrders" % self.BASE_URL_V3
@@ -107,7 +108,7 @@ class BinanceAPI:
     def _get_no_sign(self, path, params={}):
         query = urlencode(params)
         url = "%s?%s" % (path, query)
-        return requests.get(url, timeout=30, verify=True).json()
+        return safe_requests.get(url, timeout=30, verify=True).json()
     
     def _sign(self, params={}):
         data = params.copy()
@@ -126,7 +127,7 @@ class BinanceAPI:
         query = urlencode(self._sign(params))
         url = "%s?%s" % (path, query)
         header = {"X-MBX-APIKEY": self.key}
-        return requests.get(url, headers=header, \
+        return safe_requests.get(url, headers=header, \
             timeout=30, verify=True).json()
 
     def _post(self, path, params={}):
